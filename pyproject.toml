@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tandemspec"
+version = "0.1.0"
+description = "Companion draft adapters for multi-tenant speculative decoding"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.1"]
+
+[project.optional-dependencies]
+gpu = ["transformers>=4.44", "peft>=0.11", "accelerate", "bitsandbytes", "datasets"]
+viz = ["matplotlib"]
+
+[tool.setuptools.packages.find]
+include = ["tandemspec*"]

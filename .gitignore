@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Model checkpoints and corpora: regenerable with
+#   python experiments/stage0_pretrain.py && python experiments/stage1_task_loras.py
+results/*.pt
+results/*.log
+
+# Kept in the repo on purpose: results/*.json and results/tandemspec_dashboard.html
+results/dash_*.png

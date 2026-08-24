@@ -1,0 +1,335 @@
+{
+  "beta_base_model": 0.9801834225654602,
+  "beta_shared": 0.5728601117928823,
+  "beta_companion": 0.9116040070851644,
+  "scenarios": [
+    {
+      "scenario": "Llama-3.1-8B + Llama-3.2-1B draft",
+      "cost_ratio": 0.15442092154420922,
+      "gamma": 4,
+      "beta_shared": 0.5728601117928823,
+      "beta_companion": 0.9116040070851644,
+      "speedup_shared": 1.3579405550789958,
+      "speedup_companion": 2.5906090991305213,
+      "speedup_gain": 1.9077485309950237,
+      "best_gamma_shared": 2,
+      "best_speedup_shared": 1.4524511341954496,
+      "best_gamma_companion": 8,
+      "best_speedup_companion": 2.8605295655099368,
+      "n_tenants": 64,
+      "companion_bytes_per_tenant": 5636096,
+      "task_adapter_bytes_per_tenant": 167772160,
+      "private_drafter_bytes_per_tenant": 2480000000.0,
+      "companion_vs_private_drafter": 440.0208938953488,
+      "companion_overhead_frac_of_task_adapters": 0.03359375,
+      "total_companion_gb_all_tenants": 0.360710144,
+      "total_private_drafter_gb_all_tenants": 158.72,
+      "speedup_base_model_upper_bound": 2.970742969602578,
+      "fraction_of_lost_speedup_recovered": 0.7643022684931015
+    },
+    {
+      "scenario": "Llama-3.1-8B + EAGLE-3 head",
+      "cost_ratio": 0.031133250311332503,
+      "gamma": 4,
+      "beta_shared": 0.5728601117928823,
+      "beta_companion": 0.9116040070851644,
+      "speedup_shared": 1.9534493699309141,
+      "speedup_companion": 3.726690165858856,
+      "speedup_gain": 1.9077485309950237,
+      "best_gamma_shared": 5,
+      "best_speedup_shared": 1.9542080405922893,
+      "best_gamma_companion": 16,
+      "best_speedup_companion": 5.985471044139927,
+      "n_tenants": 64,
+      "companion_bytes_per_tenant": 655360,
+      "task_adapter_bytes_per_tenant": 167772160,
+      "private_drafter_bytes_per_tenant": 500000000.0,
+      "companion_vs_private_drafter": 762.939453125,
+      "companion_overhead_frac_of_task_adapters": 0.00390625,
+      "total_companion_gb_all_tenants": 0.04194304,
+      "total_private_drafter_gb_all_tenants": 32.0,
+      "speedup_base_model_upper_bound": 4.2735272619199876,
+      "fraction_of_lost_speedup_recovered": 0.7643022684931017
+    },
+    {
+      "scenario": "Llama-3.1-8B + DFlash block drafter",
+      "cost_ratio": 0.049813200498132,
+      "gamma": 4,
+      "beta_shared": 0.5728601117928823,
+      "beta_companion": 0.9116040070851644,
+      "speedup_shared": 2.0924849122747515,
+      "speedup_companion": 3.9919350175214086,
+      "speedup_gain": 1.907748530995024,
+      "best_gamma_shared": 16,
+      "best_speedup_shared": 2.2298947920048384,
+      "best_gamma_companion": 16,
+      "best_speedup_companion": 8.54154408790075,
+      "n_tenants": 64,
+      "companion_bytes_per_tenant": 1310720,
+      "task_adapter_bytes_per_tenant": 167772160,
+      "private_drafter_bytes_per_tenant": 800000000.0,
+      "companion_vs_private_drafter": 610.3515625,
+      "companion_overhead_frac_of_task_adapters": 0.0078125,
+      "total_companion_gb_all_tenants": 0.08388608,
+      "total_private_drafter_gb_all_tenants": 51.2,
+      "speedup_base_model_upper_bound": 4.577692903337781,
+      "fraction_of_lost_speedup_recovered": 0.7643022684931015
+    },
+    {
+      "scenario": "Qwen3-32B + Qwen3-1.7B draft",
+      "cost_ratio": 0.051829268292682924,
+      "gamma": 4,
+      "beta_shared": 0.5728601117928823,
+      "beta_companion": 0.9116040070851644,
+      "speedup_shared": 1.8195040321761133,
+      "speedup_companion": 3.4711561445235026,
+      "speedup_gain": 1.9077485309950237,
+      "best_gamma_shared": 4,
+      "best_speedup_shared": 1.8195040321761133,
+      "best_gamma_companion": 14,
+      "best_speedup_companion": 4.92003213969714,
+      "n_tenants": 64,
+      "companion_bytes_per_tenant": 8716288,
+      "task_adapter_bytes_per_tenant": 511705088,
+      "private_drafter_bytes_per_tenant": 3400000000.0,
+      "companion_vs_private_drafter": 390.07430686090225,
+      "companion_overhead_frac_of_task_adapters": 0.017033811475409836,
+      "total_companion_gb_all_tenants": 0.557842432,
+      "total_private_drafter_gb_all_tenants": 217.6,
+      "speedup_base_model_upper_bound": 3.980497372682333,
+      "fraction_of_lost_speedup_recovered": 0.7643022684931015
+    },
+    {
+      "scenario": "Llama-3.3-70B + Llama-3.2-3B draft",
+      "cost_ratio": 0.0453257790368272,
+      "gamma": 4,
+      "beta_shared": 0.5728601117928823,
+      "beta_companion": 0.9116040070851644,
+      "speedup_shared": 1.8595720714879402,
+      "speedup_companion": 3.547595887660491,
+      "speedup_gain": 1.9077485309950237,
+      "best_gamma_shared": 4,
+      "best_speedup_shared": 1.8595720714879402,
+      "best_gamma_companion": 15,
+      "best_speedup_companion": 5.202475055846705,
+      "n_tenants": 64,
+      "companion_bytes_per_tenant": 12156928,
+      "task_adapter_bytes_per_tenant": 828375040,
+      "private_drafter_bytes_per_tenant": 6400000000.0,
+      "companion_vs_private_drafter": 526.4487870619946,
+      "companion_overhead_frac_of_task_adapters": 0.014675632911392405,
+      "total_companion_gb_all_tenants": 0.778043392,
+      "total_private_drafter_gb_all_tenants": 409.6,
+      "speedup_base_model_upper_bound": 4.068153526441174,
+      "fraction_of_lost_speedup_recovered": 0.7643022684931013
+    },
+    {
+      "scenario": "Llama-3.1-8B NVFP4 + EAGLE-3 head fp16",
+      "cost_ratio": 0.12453300124533001,
+      "gamma": 4,
+      "beta_shared": 0.5728601117928823,
+      "beta_companion": 0.9116040070851644,
+      "speedup_shared": 1.4663048886513845,
+      "speedup_companion": 2.7973409973155006,
+      "speedup_gain": 1.9077485309950237,
+      "best_gamma_shared": 2,
+      "best_speedup_shared": 1.5219602612556504,
+      "best_gamma_companion": 9,
+      "best_speedup_companion": 3.220063437860525,
+      "n_tenants": 64,
+      "companion_bytes_per_tenant": 655360,
+      "task_adapter_bytes_per_tenant": 167772160,
+      "private_drafter_bytes_per_tenant": 500000000.0,
+      "companion_vs_private_drafter": 762.939453125,
+      "companion_overhead_frac_of_task_adapters": 0.00390625,
+      "total_companion_gb_all_tenants": 0.04194304,
+      "total_private_drafter_gb_all_tenants": 32.0,
+      "speedup_base_model_upper_bound": 3.2078097402441808,
+      "fraction_of_lost_speedup_recovered": 0.7643022684931013
+    }
+  ],
+  "best_gamma": {
+    "Llama-3.1-8B + Llama-3.2-1B draft": {
+      "shared": [
+        2,
+        1.4524511341954496
+      ],
+      "companion": [
+        8,
+        2.8605295655099368
+      ]
+    },
+    "Llama-3.1-8B + EAGLE-3 head": {
+      "shared": [
+        5,
+        1.9542080405922893
+      ],
+      "companion": [
+        16,
+        5.985471044139927
+      ]
+    },
+    "Llama-3.1-8B + DFlash block drafter": {
+      "shared": [
+        16,
+        2.2298947920048384
+      ],
+      "companion": [
+        16,
+        8.54154408790075
+      ]
+    },
+    "Qwen3-32B + Qwen3-1.7B draft": {
+      "shared": [
+        4,
+        1.8195040321761133
+      ],
+      "companion": [
+        14,
+        4.92003213969714
+      ]
+    },
+    "Llama-3.3-70B + Llama-3.2-3B draft": {
+      "shared": [
+        4,
+        1.8595720714879402
+      ],
+      "companion": [
+        15,
+        5.202475055846705
+      ]
+    },
+    "Llama-3.1-8B NVFP4 + EAGLE-3 head fp16": {
+      "shared": [
+        2,
+        1.5219602612556504
+      ],
+      "companion": [
+        9,
+        3.220063437860525
+      ]
+    }
+  },
+  "adapter_cache": [
+    {
+      "n_tenants": 8,
+      "max_loras": 4,
+      "hit_rate": 0.68075,
+      "evictions_per_1k": 319.05
+    },
+    {
+      "n_tenants": 8,
+      "max_loras": 8,
+      "hit_rate": 0.9996,
+      "evictions_per_1k": 0.0
+    },
+    {
+      "n_tenants": 8,
+      "max_loras": 16,
+      "hit_rate": 0.9996,
+      "evictions_per_1k": 0.0
+    },
+    {
+      "n_tenants": 8,
+      "max_loras": 32,
+      "hit_rate": 0.9996,
+      "evictions_per_1k": 0.0
+    },
+    {
+      "n_tenants": 16,
+      "max_loras": 4,
+      "hit_rate": 0.49835,
+      "evictions_per_1k": 501.44999999999993
+    },
+    {
+      "n_tenants": 16,
+      "max_loras": 8,
+      "hit_rate": 0.74845,
+      "evictions_per_1k": 251.14999999999998
+    },
+    {
+      "n_tenants": 16,
+      "max_loras": 16,
+      "hit_rate": 0.9992,
+      "evictions_per_1k": 0.0
+    },
+    {
+      "n_tenants": 16,
+      "max_loras": 32,
+      "hit_rate": 0.9992,
+      "evictions_per_1k": 0.0
+    },
+    {
+      "n_tenants": 32,
+      "max_loras": 4,
+      "hit_rate": 0.37945,
+      "evictions_per_1k": 620.3499999999999
+    },
+    {
+      "n_tenants": 32,
+      "max_loras": 8,
+      "hit_rate": 0.5807,
+      "evictions_per_1k": 418.9
+    },
+    {
+      "n_tenants": 32,
+      "max_loras": 16,
+      "hit_rate": 0.7937,
+      "evictions_per_1k": 205.5
+    },
+    {
+      "n_tenants": 32,
+      "max_loras": 32,
+      "hit_rate": 0.9984,
+      "evictions_per_1k": 0.0
+    },
+    {
+      "n_tenants": 64,
+      "max_loras": 4,
+      "hit_rate": 0.3031,
+      "evictions_per_1k": 696.6999999999999
+    },
+    {
+      "n_tenants": 64,
+      "max_loras": 8,
+      "hit_rate": 0.47475,
+      "evictions_per_1k": 524.85
+    },
+    {
+      "n_tenants": 64,
+      "max_loras": 16,
+      "hit_rate": 0.64815,
+      "evictions_per_1k": 351.04999999999995
+    },
+    {
+      "n_tenants": 64,
+      "max_loras": 32,
+      "hit_rate": 0.8269,
+      "evictions_per_1k": 171.5
+    },
+    {
+      "n_tenants": 128,
+      "max_loras": 4,
+      "hit_rate": 0.252,
+      "evictions_per_1k": 747.8000000000001
+    },
+    {
+      "n_tenants": 128,
+      "max_loras": 8,
+      "hit_rate": 0.39745,
+      "evictions_per_1k": 602.15
+    },
+    {
+      "n_tenants": 128,
+      "max_loras": 16,
+      "hit_rate": 0.55415,
+      "evictions_per_1k": 445.05
+    },
+    {
+      "n_tenants": 128,
+      "max_loras": 32,
+      "hit_rate": 0.70505,
+      "evictions_per_1k": 293.35
+    }
+  ]
+}
