@@ -2,9 +2,13 @@
 
 **Companion draft adapters for multi-tenant speculative decoding.**
 
-![TandemSpec results](docs/hero.png)
+![Acceptance collapse](docs/fig1_acceptance_collapse.png)
 
-## Results at a glance
+**Figure 1.** Shared-drafter acceptance as each tenant's LoRA is scaled from 0 (base model) to 1.3.
+Blue: tenants whose domain appears in the pretraining mixture. Orange: tenants fine-tuned on data the
+base model never saw. Same drafter and same base model throughout — only the tenant's adapter changes.
+
+## Results
 
 | | acceptance β | tokens/step | greedy agreement |
 |---|---|---|---|
@@ -17,8 +21,17 @@
 <sub>Averaged over 6 tenants, γ=4, temperature 1.0. "greedy agreement" is top-1 match rate, the regime most production
 serving actually runs in. Rows 2–3 are the same drafter and the same base model — only the tenant's adapter changes.</sub>
 
-A **20 KB** per-tenant adapter on the drafter recovers **83%** of the lost acceptance; a private per-tenant
-drafter recovers 92% and costs **2.5 GB**. That ratio is the whole argument.
+<img src="docs/fig2_beta_vs_shift.png" width="380">
+
+**Figure 2.** Acceptance against the distribution shift the adapter induces, pooled over all tenants and
+strengths. Dashed line is the triangle-inequality bound `β₀ − Δ`; the measured slope is 0.82, so the
+drafter absorbs part of the shift at low adapter strength and progressively less as it grows.
+
+![Companion adapter repair](docs/fig3_companion_repair.png)
+
+**Figure 3.** Mean acceptance by drafter-side training arm, over 6 tenants. A **20 KB** per-tenant adapter
+recovers **83%** of the lost acceptance; a private per-tenant drafter recovers 92% and costs **2.5 GB**.
+That ratio is the argument.
 
 What the adapter is trained on matters more than how big it is:
 
@@ -35,6 +48,8 @@ distribution, so the drafter has to be distilled from it.
 [Full writeup](paper/tandemspec_filled.md) · [first-order theory](paper/theory.md) ·
 [vLLM RFC #52038 comment](rfc/vllm_rfc_52038_comment.md) ·
 [interactive dashboard](results/tandemspec_dashboard.html) (download and open locally)
+
+Figures are regenerated from the result JSON with `python experiments/make_figures.py`.
 
 ---
 
