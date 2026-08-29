@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 dependencies = ["torch>=2.1"]
 
 [project.optional-dependencies]
-gpu = ["transformers>=4.44", "peft>=0.11", "accelerate", "bitsandbytes", "datasets"]
+gpu = ["transformers>=4.44", "peft>=0.11", "accelerate", "bitsandbytes", "datasets", "torchao>=0.16.0"]
 viz = ["matplotlib"]
 
 [tool.setuptools.packages.find]
