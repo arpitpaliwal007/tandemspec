@@ -1,0 +1,40 @@
+{
+  "experiment": "TandemSpec real-Qwen companion-adapter rank ablation",
+  "models": {
+    "target": "Qwen/Qwen2.5-1.5B-Instruct",
+    "drafter": "Qwen/Qwen2.5-0.5B-Instruct"
+  },
+  "setup": {
+    "tenants": ["math", "sql", "dialog", "code"],
+    "companion_loss": "forward_kl",
+    "companion_steps": 1000,
+    "evaluation_prompts": 64,
+    "target_rollouts": 96,
+    "speculation_depth": 4,
+    "notes": "Rank-4 and rank-8 use the same model, training budget, and evaluation budget; they were separate stochastic runs. beta is 1 - TVD(target distribution, draft distribution)."
+  },
+  "rank_4": {
+    "per_tenant": {
+      "math": {"shared_beta": 0.5243, "companion_beta": 0.7961},
+      "sql": {"shared_beta": 0.4051, "companion_beta": 0.8788},
+      "dialog": {"shared_beta": 0.6022, "companion_beta": 0.8121},
+      "code": {"shared_beta": 0.4042, "companion_beta": 0.8840}
+    },
+    "mean_shared_beta": 0.4840,
+    "mean_companion_beta": 0.8428
+  },
+  "rank_8": {
+    "per_tenant": {
+      "math": {"shared_beta": 0.5243, "companion_beta": 0.8038},
+      "sql": {"shared_beta": 0.4010, "companion_beta": 0.8788},
+      "dialog": {"shared_beta": 0.6044, "companion_beta": 0.8187},
+      "code": {"shared_beta": 0.4045, "companion_beta": 0.8844}
+    },
+    "mean_shared_beta": 0.4836,
+    "mean_companion_beta": 0.8464
+  },
+  "summary": {
+    "rank_4_vs_rank_8_mean_beta_gap": 0.0036,
+    "rank_4_companion_beta_gain_over_shared": 0.3588
+  }
+}
