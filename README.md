@@ -1,6 +1,19 @@
 # TandemSpec
 
-**Companion draft adapters for multi-tenant speculative decoding.**
+Companion LoRA adapters for multi-tenant speculative decoding.
+
+Multi-LoRA serving changes the target model for each tenant, while a shared
+speculative drafter usually still approximates the base model. This repository
+tests the resulting mismatch and a simple fix: pair every target-side task LoRA
+with a small drafter-side companion LoRA trained to match that tenant's adapted
+target distribution.
+
+For target distribution `p` and draft distribution `q`, the per-token
+acceptance probability is:
+
+```
+beta = sum_v min(p_v, q_v) = 1 - TVD(p_target, q_draft)
+```
 
 ![Acceptance collapse](docs/fig1_acceptance_collapse.png)
 
@@ -8,7 +21,7 @@
 Blue: tenants whose domain appears in the pretraining mixture. Orange: tenants fine-tuned on data the
 base model never saw. Same drafter and same base model throughout — only the tenant's adapter changes.
 
-## Results
+## CPU synthetic pilot
 
 | | acceptance β | tokens/step | greedy agreement |
 |---|---|---|---|
@@ -18,20 +31,20 @@ base model never saw. Same drafter and same base model throughout — only the t
 | + rank-4 companion adapter (20 KB/tenant) | 0.912 | 4.23 | 0.650 |
 | + private drafter fine-tune (26× params) | 0.949 | 4.52 | 0.817 |
 
-<sub>Averaged over 6 tenants, γ=4, temperature 1.0. "greedy agreement" is top-1 match rate, the regime most production
-serving actually runs in. Rows 2–3 are the same drafter and the same base model — only the tenant's adapter changes.</sub>
+<sub>Averaged over 6 tenants, γ=4, temperature 1.0. Rows 2–3 use the same base
+model and shared drafter; only the tenant adapter changes.</sub>
 
 <img src="docs/fig2_beta_vs_shift.png" width="380">
 
-**Figure 2.** Acceptance against the distribution shift the adapter induces, pooled over all tenants and
-strengths. Dashed line is the triangle-inequality bound `β₀ − Δ`; the measured slope is 0.82, so the
-drafter absorbs part of the shift at low adapter strength and progressively less as it grows.
+**Figure 2.** Acceptance versus the distribution shift induced by the tenant
+adapter, pooled over tenants and LoRA strengths. The dashed line is the
+triangle-inequality bound `β₀ − Δ`.
 
 ![Companion adapter repair](docs/fig3_companion_repair.png)
 
-**Figure 3.** Mean acceptance by drafter-side training arm, over 6 tenants. A **20 KB** per-tenant adapter
-recovers **83%** of the lost acceptance; a private per-tenant drafter recovers 92% and costs **2.5 GB**.
-That ratio is the argument.
+**Figure 3.** Mean acceptance by drafter-side training arm over 6 tenants. A
+20 KB companion adapter recovers 83% of lost acceptance in this synthetic
+setup; a private drafter recovers 92% and costs about 2.5 GB per tenant.
 
 What the adapter is trained on matters more than how big it is:
 
@@ -42,8 +55,8 @@ What the adapter is trained on matters more than how big it is:
 | distil from adapted target, forward KL | 0.9000 | 80% |
 | distil from adapted target, **TVD (= 1 − β)** | 0.9116 | 83% |
 
-Matching *which tokens* the tenant's model emits is not enough — acceptance is a function of the full
-distribution, so the drafter has to be distilled from it.
+Hard-label training helps little. Distilling the full adapted-target
+distribution is substantially more effective.
 
 [Full writeup](paper/tandemspec_filled.md) · [first-order theory](paper/theory.md) ·
 [vLLM RFC #52038 comment](rfc/vllm_rfc_52038_comment.md) ·
@@ -53,44 +66,32 @@ Figures are regenerated from the result JSON with `python experiments/make_figur
 
 ---
 
+## Real-Qwen evaluation
 
-Two features that modern LLM servers ship independently do not compose:
+The Colab pipeline evaluates Qwen2.5-1.5B as the target and Qwen2.5-0.5B as
+the drafter across four tenants (math, SQL, dialogue, and code). With rank-4
+forward-KL companion adapters, mean acceptance increased from approximately
+`β=0.48` to `β=0.84`.
 
-* **Multi-LoRA serving** — one base model, hundreds of tenant adapters, selected
-  per request and batched together (vLLM's punica/SGMV path).
-* **Speculative decoding** — a small drafter proposes tokens that the target
-  verifies (EAGLE-3.1, DFlash, draft models).
+The T4 cost model is deliberately reported as a cost estimate, not a serving
+benchmark. At speculation depth 4, the rank-4 companion was approximately
+break-even against target-only decoding, while the shared drafter was slower.
+The stored measurements are in:
 
-The drafter is trained to imitate the **base** model. Every request is verified
-against **base + tenant adapter**. The drafter is therefore approximating the
-wrong distribution for every adapted request, and because per-token acceptance
-is exactly
+- `results/qwen_rank_ablation_r4_r8.json`
+- `results/qwen_t4_throughput_calibration.json`
 
-```
-beta = sum_v min(p_v, q_v) = 1 - TVD(p_target, q_draft)
-```
+## Main observations
 
-the tenant's distribution shift is subtracted from acceptance almost
-one-for-one. TandemSpec measures that loss and repairs it with a **rank-4 LoRA
-on the drafter, minted per tenant**, trained by on-policy distillation from the
-*adapted* target under a total-variation objective that *is* the acceptance rate.
+1. A base-model drafter can lose acceptance when the target is adapted for a
+   tenant.
+2. A small companion adapter on the drafter can recover most of that loss.
+3. The serving layer must resolve a tenant ID to both a target adapter and a
+   draft adapter.
 
-## The three claims
-
-1. **It gets worse as drafters get better.** `E[tokens/step] =
-   (1-beta^(gamma+1))/(1-beta)`, so `dT/dbeta ≈ gamma(gamma+1)/2` — about 10x at
-   `gamma=4`, ~36x at `gamma=8`. The penalty for ignoring the tenant's adapter
-   grows *quadratically in speculation depth*, exactly the direction
-   block-diffusion drafters are pushing.
-2. **On-policy training data is free.** Speculative sampling is
-   distribution-preserving, so the contexts the drafter is invoked on in
-   deployment are distributed as the target's *own output*. Teacher rollouts
-   from the adapted target are already on-policy — no RL, no interleaved
-   sampling.
-3. **The fix is cheap enough to mint per tenant.** For an 8B target with a 1B
-   drafter: rank-32 task adapters are ~168 MB/tenant; rank-4 companion adapters
-   are ~5.6 MB — 3.4% overhead on adapter memory and ~440x smaller than a
-   private drafter per tenant.
+The companion is trained from rollouts of the adapted target, which provide
+on-policy contexts for speculative decoding. See the writeup for the derivation
+and the CPU results for the controlled experiment.
 
 ## Repository layout
 
@@ -155,10 +156,10 @@ python experiments/gpu/tandemspec_gpu.py --stage e2          # companion repair
 python experiments/gpu/tandemspec_gpu.py --stage throughput  # measured cost ratio
 ```
 
-## The serving change
+## Serving integration
 
-One thing has to change in the engine: **a tenant id must resolve to a pair of
-adapters**, both selected per request.
+For each request, resolve the tenant ID to a target adapter and a companion
+draft adapter:
 
 ```python
 from tandemspec.serving.paired_adapters import PairedAdapter, AdapterSpec, PairedAdapterRegistry
@@ -171,22 +172,6 @@ reg.register(PairedAdapter(
 ))
 ```
 
-`max_loras` keeps its meaning — distinct tenants admitted per batch — and becomes
-a constraint on pairs. The draft side allocates the same cardinality at a much
-smaller rank, so the binding memory constraint stays the target side and
-existing multi-LoRA scheduling is unchanged. Hook points for vLLM are enumerated
-in `tandemspec/serving/vllm_integration.py`; `rfc/` contains the writeup aimed at
-[vLLM RFC #52038](https://github.com/vllm-project/vllm/issues/52038), which
-proposes drafter-side LoRA but selects it per *deployment* rather than per
-*request*.
-
-## Not covered by the PEFT-drafting negative result
-
-[arXiv:2607.12422](https://arxiv.org/abs/2607.12422) shows PEFT-based
-block-diffusion drafting fails in practice — longer accepted prefixes (2.881 vs
-1.511) but 34 vs 188 tokens/s — because the adapter drafts on the **target's own
-backbone**, making a draft forward as expensive as verification (~50.3 ms vs
-~50.6 ms). TandemSpec's adapter rides on a *separate, small* drafter that the
-serving stack already runs, so the draft forward stays 5-20x cheaper and the
-adapter only changes which distribution it approximates. The authors scope their
-claim to same-backbone adapters explicitly.
+`max_loras` now limits admitted adapter pairs. The draft-side adapters use a
+smaller rank, so target-side adapter memory remains the main capacity limit.
+See `tandemspec/serving/vllm_integration.py` for the proposed vLLM hook points.
