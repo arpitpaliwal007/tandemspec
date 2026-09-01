@@ -1,24 +1,22 @@
 {
-  "experiment": "TandemSpec measured-cost throughput calibration",
+  "experiment": "TandemSpec measured-cost throughput estimate",
   "models": {
     "target": "Qwen/Qwen2.5-1.5B-Instruct",
     "drafter": "Qwen/Qwen2.5-0.5B-Instruct"
   },
   "hardware": "Google Colab T4",
   "measurement": {
-    "target_decode_ms": 71.55299186706543,
-    "draft_decode_ms": 36.42709255218506,
-    "draft_to_target_cost_ratio": 0.5090925145360945,
+    "draft_to_target_cost_ratio": 0.63675,
     "speculation_depth": 4
   },
   "rank_4_companion": {
-    "mean_shared_beta": 0.48395,
-    "mean_companion_beta": 0.84275,
-    "expected_tokens_per_speculative_step_shared": 1.8863555727986732,
-    "expected_tokens_per_speculative_step_companion": 3.6559450313315667,
-    "calibrated_speedup_shared": 0.6212535154399081,
-    "calibrated_speedup_companion": 1.2040512063163442,
-    "relative_throughput_improvement": 1.9380996266294903
+    "mean_shared_beta": 0.486,
+    "mean_companion_beta": 0.833,
+    "expected_tokens_per_speculative_step_shared": 1.892775806416,
+    "expected_tokens_per_speculative_step_companion": 3.586380481320999,
+    "calibrated_speedup_shared": 0.5336272360913448,
+    "calibrated_speedup_companion": 1.011102475703693,
+    "relative_throughput_improvement": 1.8947729938031412
   },
-  "interpretation": "This is a measured-cost estimate: per-token decode latencies are measured on a T4 and combined with observed acceptance. It is not an end-to-end vLLM serving benchmark."
+  "interpretation": "This is a measured-cost estimate using the recorded T4 draft-to-target decode cost ratio and the verified 4-tenant rank-4 forward-KL acceptance results. It is not an end-to-end vLLM serving benchmark; the companion adapter is approximately break-even at this small-model scale."
 }
