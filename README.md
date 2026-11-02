@@ -68,18 +68,43 @@ Figures are regenerated from the result JSON with `python experiments/make_figur
 
 ## Real-Qwen evaluation
 
-The Colab pipeline evaluates Qwen2.5-1.5B as the target and Qwen2.5-0.5B as
-the drafter across four tenants (math, SQL, dialogue, and code). With rank-4
-forward-KL companion adapters, mean acceptance increased from approximately
-`β=0.48` to `β=0.84`.
+The Colab T4 runs use Qwen2.5-1.5B-Instruct as the target and
+Qwen2.5-0.5B-Instruct as the drafter across four tenants: math, SQL, dialogue,
+and code. Each companion adapter was trained for 1,000 steps with forward KL,
+using 96 target rollouts and 64 evaluation prompts per tenant.
 
-The T4 cost model is deliberately reported as a cost estimate, not a serving
-benchmark. At speculation depth 4, the rank-4 companion was approximately
-break-even against target-only decoding, while the shared drafter was slower.
-The stored measurements are in:
+| Companion rank | Mean shared-drafter β | Mean companion β | Companion parameters per tenant |
+|---|---:|---:|---:|
+| 4 | 0.483952 | 0.842747 | 2,199,552 |
+| 8 | 0.483559 | 0.846432 | 4,399,104 |
 
-- `results/qwen_rank_ablation_r4_r8.json`
-- `results/qwen_t4_throughput_calibration.json`
+Rank-4 achieved acceptance within 0.003685 of rank-8 with half the adapter
+parameters. These are separate stochastic runs with the same training and
+evaluation budgets; their shared baselines differ slightly. Multi-seed
+confidence intervals have not been measured.
+
+The raw JSON files were retrieved from Drive and checked against the saved
+Colab outputs. Checks cover tenant/arm coverage, parameter counts,
+`β = 1 − TVD`, and the γ=4 IID tokens-per-step formula.
+
+- [Rank-4 raw results](results/real_qwen/rank_ablation_r4_s1000/gpu_e2.json)
+- [Rank-8 raw results](results/real_qwen/rank_ablation_r8_s1000/gpu_e2.json)
+- [Verification record and run settings](results/real_qwen/raw_verification.json)
+
+### Decode cost measurements
+
+The earlier T4 calibration measured a draft/target latency ratio of 0.63675.
+The separate calibration saved with the longer rank-4 run measured
+36.43 ms for the drafter and 71.55 ms for the target, giving a ratio of
+0.50909. These measurements belong to different runs.
+
+These are model-forward latency measurements. Actual end-to-end speculative
+generation and vLLM serving throughput remain unmeasured. The older
+[cost-model estimate](results/qwen_t4_throughput_calibration.json) uses the
+earlier acceptance results and 0.63675 calibration; it should not be read as
+throughput measured for the 1,000-step runs above.
+
+- [Longer-run raw latency calibration](results/real_qwen/rank_ablation_r4_s1000/gpu_cost_ratio.json)
 
 ## Main observations
 
