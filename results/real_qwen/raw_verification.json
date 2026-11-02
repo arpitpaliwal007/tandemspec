@@ -1,0 +1,43 @@
+{
+  "verified_on": "2026-11-02",
+  "source": "Original JSON files downloaded from Google Drive through the browser; saved Colab outputs inspected for run settings and completion",
+  "colab_url": "https://colab.research.google.com/drive/1p-2hlyUfw1Avr61wACWCBz1WuwznYvUi",
+  "rank_4": {
+    "file": "rank_ablation_r4_s1000/gpu_e2.json",
+    "drive_folder_url": "https://drive.google.com/drive/u/0/folders/1z1Xgeh0CUc_licVk9sQrLFLpeUidgXBc",
+    "mean_shared_beta": 0.4839516736101359,
+    "mean_companion_beta": 0.8427469665184617,
+    "companion_parameters": 2199552
+  },
+  "rank_8": {
+    "file": "rank_ablation_r8_s1000/gpu_e2.json",
+    "drive_folder_url": "https://drive.google.com/drive/u/0/folders/1AAK-FugllxLXHQU0vNCCuoubrmd1vIhH",
+    "mean_shared_beta": 0.4835591323208064,
+    "mean_companion_beta": 0.8464315193705261,
+    "companion_parameters": 4399104
+  },
+  "settings_from_notebook": {
+    "companion_steps": 1000,
+    "n_eval": 64,
+    "n_roll": 96,
+    "loss": "fkl",
+    "batch_size": 2,
+    "eval_batch_size": 2
+  },
+  "checks_passed": [
+    "Eight rows per file: shared and companion for each of four tenants",
+    "Finite acceptance, TVD, and tokens-per-step values",
+    "beta + TVD equals 1 within 1e-6",
+    "Stored IID tokens per step match sum(beta**i for i in range(5)) within 1e-9",
+    "Parameter counts match adapter rank",
+    "Previously committed per-tenant summaries match within rounding precision",
+    "Saved notebook outputs include final companion evaluation for all four tenants",
+    "Longer-run latency ratio matches draft latency divided by target latency"
+  ],
+  "limitations": [
+    "Separate stochastic runs with slightly different shared baselines; no multi-seed confidence intervals",
+    "The initial malformed rank-8 command failed, then the corrected command completed",
+    "The longer-run cost ratio is 0.5090925145360945; the earlier run used 0.6367513354759835",
+    "Latency calibration times model forwards, not end-to-end speculative generation or vLLM serving"
+  ]
+}

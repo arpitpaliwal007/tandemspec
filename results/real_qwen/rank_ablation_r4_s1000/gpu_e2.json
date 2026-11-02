@@ -1,0 +1,82 @@
+[
+  {
+    "tenant": "math",
+    "arm": "shared-drafter",
+    "params": 0,
+    "beta": 0.5243185283616185,
+    "beta_greedy": 0.5365306744351983,
+    "tvd": 0.4756815517321229,
+    "target_entropy": 1.0148293394595385,
+    "tokens_per_step_iid": 2.0189442754684728
+  },
+  {
+    "tenant": "math",
+    "arm": "companion-fkl-r4",
+    "params": 2199552,
+    "beta": 0.7961052358150482,
+    "beta_greedy": 0.8080150540918112,
+    "tvd": 0.20389490551315248,
+    "target_entropy": 1.0148293394595385,
+    "tokens_per_step_iid": 3.3361287658471452
+  },
+  {
+    "tenant": "sql",
+    "arm": "shared-drafter",
+    "params": 0,
+    "beta": 0.40505015570670366,
+    "beta_greedy": 0.4058159729465842,
+    "tvd": 0.5949499066919088,
+    "target_entropy": 0.9970206152647734,
+    "tokens_per_step_iid": 1.6624881232710689
+  },
+  {
+    "tenant": "sql",
+    "arm": "companion-fkl-r4",
+    "params": 2199552,
+    "beta": 0.8787743020802736,
+    "beta_greedy": 0.8826678302139044,
+    "tvd": 0.12122582946904004,
+    "target_entropy": 0.9970206152647734,
+    "tokens_per_step_iid": 3.926008217714506
+  },
+  {
+    "tenant": "dialog",
+    "arm": "shared-drafter",
+    "params": 0,
+    "beta": 0.6022041467949748,
+    "beta_greedy": 0.5902777817100286,
+    "tvd": 0.3977960115298629,
+    "target_entropy": 1.454764986410737,
+    "tokens_per_step_iid": 2.3147581177352285
+  },
+  {
+    "tenant": "dialog",
+    "arm": "companion-fkl-r4",
+    "params": 2199552,
+    "beta": 0.8120623957365751,
+    "beta_greedy": 0.7887008115649223,
+    "tvd": 0.18793774116784334,
+    "target_entropy": 1.454764986410737,
+    "tokens_per_step_iid": 3.4418866378391386
+  },
+  {
+    "tenant": "code",
+    "arm": "shared-drafter",
+    "params": 0,
+    "beta": 0.40423386357724667,
+    "beta_greedy": 0.41037326864898205,
+    "tvd": 0.5957661755383015,
+    "target_entropy": 0.9128661882132292,
+    "tokens_per_step_iid": 1.6603939205775489
+  },
+  {
+    "tenant": "code",
+    "arm": "companion-fkl-r4",
+    "params": 2199552,
+    "beta": 0.8840459324419498,
+    "beta_greedy": 0.8905526660382748,
+    "tvd": 0.115954166976735,
+    "target_entropy": 0.9128661882132292,
+    "tokens_per_step_iid": 3.9672983469088328
+  }
+]
